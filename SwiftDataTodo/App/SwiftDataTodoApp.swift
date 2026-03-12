@@ -11,7 +11,8 @@ import SwiftUI
 struct SwiftDataTodoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
+                .modelContainer(for: TaskModel.self)
         }
     }
 }
