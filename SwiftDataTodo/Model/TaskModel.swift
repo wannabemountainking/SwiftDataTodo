@@ -56,6 +56,10 @@ extension TaskModel {
         return container
     }
     
+    func dateFormatted(date: Date?) -> String {
+        TaskModel.dateFormatter().string(from: date ?? Date())
+    }
+    
     static func dateFormatter() -> DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "yy년 MM월 dd일"
