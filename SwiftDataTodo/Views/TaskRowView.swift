@@ -6,32 +6,38 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct TaskRowView: View {
     
     let task: TaskModel
     
     var body: some View {
+        
         HStack {
-            VStack(spacing: 10) {
-                Text(task.taskName)
-                Text(task.dateFormatted(date: task.dueDate))
+            VStack(alignment: .leading, spacing: 5) {
+                HStack(spacing: 30) {
+                    Text(task.taskName)
+                        .font(.title2)
+                        .strikethrough(task.isComplete, color: .red)
+                    Image(systemName: task.isImportant ? "exclamationmark.triangle.fill" : "")
+                        .font(.title2)
+                        .foregroundStyle(.red)
+                    Spacer()
+                }
+                Text(task.formattedDueDate())
+                    .font(.subheadline)
             }
-            Spacer()
-            LabeledContent {
-                //content (view)
-                Text(task.isImportant ? "중요" : "")
-            } label: {
-                Image(systemName: "exclamationmark.triangle")
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .tint(.red)
-            }
-
         }
-    }
+        .padding(.horizontal)
+        
+    }//:body
 }
 
 #Preview {
-    TaskRowView(task: <#TaskModel#>)
+    
+    let _ = TaskModel.previewTodo
+    let task = TaskModel(taskName: "완료된 일", isComplete: true, isImportant: true, dueDate: .now)
+    
+    TaskRowView(task: task)
 }

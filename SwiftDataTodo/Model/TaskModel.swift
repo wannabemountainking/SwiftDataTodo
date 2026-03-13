@@ -10,7 +10,7 @@ import SwiftData
 
 
 @Model
-class TaskModel {
+final class TaskModel {
     var taskName: String
     var isComplete: Bool
     var isImportant: Bool
@@ -22,42 +22,40 @@ class TaskModel {
         self.isImportant = isImportant
         self.dueDate = dueDate
     }
+    
 }
 
+// preview 전용의 TaskModel(데이터를 넣은 상태)
 
-// Preview용 ModelContainer 생성하기
-
+@MainActor
 extension TaskModel {
     
-    @MainActor
-    static var taskContainerForPreview: ModelContainer {
+    static var previewTodo: ModelContainer {
         let container: ModelContainer
-        
-        // container 만들기
         do {
             container = try ModelContainer(for: TaskModel.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
         } catch {
-            fatalError("Failed to Create ModelContainer for Preview: \(error)")
+            fatalError("Error on Generating ModelContainer for Preview")
         }
         
-        // mainContext에 넣기
         container.mainContext.insert(TaskModel(taskName: "집 청소하기", isImportant: false))
         container.mainContext.insert(TaskModel(taskName: "SwiftUI 강의 듣기", isImportant: true))
         
-        let duedateTask = TaskModel(taskName: "Javascript 연습하기", isImportant: true)
-        duedateTask.dueDate = dateFormatter().date(from: "26년 03월 11일")
-        container.mainContext.insert(duedateTask)
-        let completedTask = TaskModel(taskName: "빨래하기", isComplete: true, isImportant: false)
-        container.mainContext.insert(completedTask)
+        let todoWithDueDate = TaskModel(taskName: "Javascript 연습하기", isImportant: true)
+        todoWithDueDate.dueDate = dateFormatter().date(from: "24년 07월 05일")
+        container.mainContext.insert(todoWithDueDate)
         
-        // mainContext에 저장하기
+        let todoWithIsComplete = TaskModel(taskName: "빨래하기",isComplete: true, isImportant: false)
+        container.mainContext.insert(todoWithIsComplete)
+        
+        // 잊기 쉬운 mainContext의 저장
         try? container.mainContext.save()
         
         return container
     }
     
-    func dateFormatted(date: Date?) -> String {
-        TaskModel.dateFormatter().string(from: date ?? Date())
+    func formattedDueDate() -> String {
+        TaskModel.dateFormatter().string(from: self.dueDate ?? Date())
     }
     
     static func dateFormatter() -> DateFormatter {
