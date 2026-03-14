@@ -23,7 +23,16 @@ struct CreateUpdateTaskView: View {
     var isNewTask: Bool { task == nil }
     
     var body: some View {
-        
+        Form {
+            LabeledContent {
+                //contentView
+                TextField("할 일을 입력하세요", text: $taskName)
+                    
+            } label: {
+                Text("해야할 일")
+            }
+
+        }
     }
 }
 
